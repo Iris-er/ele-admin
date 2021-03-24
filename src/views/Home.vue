@@ -4,7 +4,7 @@
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <el-form :model="loginForm" ref="ruleForm">
       <el-form-item label="手机号码">
-        <el-input v-model="loginForm.phone" placeholder="请输入手机号码" />
+        <el-input v-model="loginForm.userName" placeholder="请输入手机号码" />
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model="loginForm.password" placeholder="请输入手机号码" />
@@ -29,9 +29,8 @@ export default {
   data () {
     return {
       loginForm: {
-        phone: '',
-        password: '',
-        areaCode: 86
+        userName: '',
+        password: ''
       }
     }
   },
@@ -39,11 +38,9 @@ export default {
     submit () {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          console.log('大萨达')
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: '/about' })
           }).catch(() => {
-            console.log('登录失败')
           })
         }
       })

@@ -13,7 +13,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {
-      config.headers.Authorization = store.getters.token
+      config.headers.token = store.getters.token
     }
     return config
   },
@@ -26,21 +26,20 @@ service.interceptors.request.use(
 // 响应拦截
 service.interceptors.response.use(
   response => {
-    if (response.data.code !== 200) {
-      Message({
-        message: response.data.msg,
-        type: 'error',
-        duration: 3 * 1000
-      })
-      return
-    }
+    // if (response.data.code !== 200) {
+    //   Message({
+    //     message: response.data.msg,
+    //     type: 'error',
+    //     duration: 3 * 1000
+    //   })
+    //   return
+    // }
     return response.data
   },
   error => {
     let message
-    console.log(error.response)
     if (typeof error.response.data !== 'undefined') {
-      message = error.response.data
+      message = error.response.data.message
     }
     if (error.response.status === 401) {
       this.$store.dispatch('user/logout')

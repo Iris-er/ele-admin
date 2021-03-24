@@ -1,4 +1,4 @@
-import { login, logout } from '@/api/user'
+import { login } from '@/api/user'
 const state = {
   user: {
     name: '',
@@ -31,18 +31,20 @@ const mutations = {
 
 const actions = {
   login ({ commit }, userInfo) {
-    const { phone, password, areaCode } = userInfo
+    const { userName, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ phone: phone.trim(), password: password, area_code: areaCode }).then(response => {
+      login({ userName: userName.trim(), password }).then(response => {
         const { data } = response
+        console.log('token', data.token)
         commit('SET_TOKEN', data.token)
+        console.log('qqqtoken', state.token)
         // commit('SET_AUTHORIZATION', data.authorization)
-        const user = {
+        const users = {
           name: data.name,
           avatar: data.avatar,
           uid: data.uid
         }
-        commit('SET_USER', user)
+        commit('SET_USER', users)
         // commit('SET_ROLES', data.roles)
         resolve(data)
       }).catch(error => {
