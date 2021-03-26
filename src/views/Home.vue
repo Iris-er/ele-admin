@@ -13,7 +13,8 @@
         <el-button type="primary" @click="submit">登录</el-button>
       </el-form-item>
     </el-form>
-    <el-button @click="logingout">退出登录</el-button>
+    <el-button @click="logingout">退出登录</el-button> <i class="iconfont">&#xe656;</i>
+
   </div>
 </template>
 
