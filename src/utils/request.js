@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '../store'
 import { Message } from 'element-ui'
+import { getAesString } from './encryption'
 
 //  创建一个axios实例
 const service = axios.create({
@@ -12,9 +13,13 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   config => {
+    console.log(config, config.params)
+    console.log('fsdgfdsgh', getAesString(JSON.stringify(config.params)))
     if (store.getters.token) {
       config.headers.token = store.getters.token
     }
+    config.params = getAesString(JSON.stringify(config.params))
+
     return config
   },
   error => {

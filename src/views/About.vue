@@ -5,10 +5,16 @@
 </template>
 <script>
 import { getGoods } from '@/api/user.js'
+// import { aes } from '@/utils/encryption'
 export default {
   name: 'about',
+  props: ['id'],
   created () {
     this.getPos()
+  },
+  mounted () {
+    console.log(1111, this.$route.query.id)
+    // console.log('fsdggh', aes.en(JSON.stringify({ pageIndex: 1, pageSize: 10 })))
   },
   methods: {
     getPos () {

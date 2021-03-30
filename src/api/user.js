@@ -1,4 +1,5 @@
-import request from '@/utils/request'
+import request, { get } from '@/utils/request'
+
 export function login (data) {
   return request({
     url: '/platform/loginUser',
@@ -32,5 +33,13 @@ export function getGoods ({ pageIndex, pageSize }) {
     url: '/manager/goods/',
     method: 'get',
     params: { pageIndex, pageSize }
+  })
+}
+
+export function test ({ pageIndex, pageSize }) {
+  return get({
+    url: '/platform/loginUser',
+    params: { pageIndex, pageSize },
+    level: 1
   })
 }

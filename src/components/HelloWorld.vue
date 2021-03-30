@@ -1,42 +1,45 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
+    <ul ref="ul1">
+        <li v-for="(item, index) in list" :key="index">
+            {{item}}
+        </li>
     </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <button @click="addItem">添加一项</button>
   </div>
 </template>
 
 <script>
+import { generateStr, md5 } from '@/utils/encryption.js'
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data () {
+    return {
+      list: ['a', 'b', 'c']
+    }
+  },
+  mounted () {
+    console.log('父组件方法', this.$parent.toChild())
+    console.log(generateStr())
+    console.log(md5('fdsfgdsg'))
+  },
+  methods: {
+    addItem () {
+      this.list.push(`${Date.now()}`)
+      this.list.push(`${Date.now()}`)
+      this.list.push(`${Date.now()}`)
+      // 1. 异步渲染，$nextTick 待 DOM 渲染完再回调
+      // 3. 页面渲染时会将 data 的修改做整合，多次 data 修改只会渲染一次
+      this.$nextTick(() => {
+        // 获取 DOM 元素
+        const ulElem = this.$refs.ul1
+        // eslint-disable-next-line
+          console.log( ulElem.childNodes.length )
+      })
+    }
   }
 }
 </script>
