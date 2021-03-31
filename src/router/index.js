@@ -17,6 +17,31 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/menu',
+    name: 'Menu',
+    component: () => import(/* webpackChunkName: "menu" */ '../views/menu/NavMenu.vue'),
+    children: [
+      {
+        path: '',
+        name: 'overview',
+        component: () => import(/* webpackChunkName: "menu" */ '../views/Overview.vue'),
+        meta: {
+          title: '概览'
+        }
+      },
+      {
+        path: '/menu/product',
+        name: 'Product',
+        component: () => import(/* webpackChunkName: "menu" */ '../views/Product.vue')
+      },
+      {
+        path: '/menu/post',
+        name: 'Post',
+        component: () => import(/* webpackChunkName: "menu" */ '../views/Post.vue')
+      }
+    ]
   }
 ]
 

@@ -20,6 +20,9 @@
     <div>{{obj.a}}</div>
     <el-button @click="handleEvent">event和$event区别</el-button>
     <el-button @click="hanele(2, $event)">这是$event</el-button>
+    <el-button @click="reload()">强制刷新组价</el-button>
+    <router-link to="/menu">去导航页</router-link>
+    <div class="test">修改公共样式</div>
   </div>
 </template>
 
@@ -49,7 +52,7 @@ export default {
   watch: {
     obj: {
       handler (newName, oldName) {
-        console.log('obj.a changed')
+        console.log('obj.a changed', this)
       },
       immediate: true,
       deep: true
@@ -80,6 +83,9 @@ export default {
     },
     hanele (val, event) {
       console.log('val:' + val, 'event:', event, event.target)
+    },
+    reload () {
+      this.$forceUpdate()
     }
   }
 }
@@ -88,5 +94,8 @@ export default {
 .home{
   width: 40%;
   margin: 10px auto;
+ /deep/ .test {
+   color: pink;
+  }
 }
 </style>

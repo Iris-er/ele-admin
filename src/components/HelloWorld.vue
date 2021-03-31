@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { generateStr, md5 } from '@/utils/encryption.js'
 export default {
   name: 'HelloWorld',
   props: {
@@ -23,8 +22,7 @@ export default {
   },
   mounted () {
     console.log('父组件方法', this.$parent.toChild())
-    console.log(generateStr())
-    console.log(md5('fdsfgdsg'))
+    console.log(this.$data, this.$options.data())
   },
   methods: {
     addItem () {

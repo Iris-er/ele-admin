@@ -21,25 +21,16 @@ export function getInfo () {
   })
 }
 
-export function getPowers () {
+export function getPublickey () {
   return request({
-    url: '/df/adm/auth/v1/powers',
+    url: '/nonLogin/getRSA',
     method: 'get'
   })
 }
 
-export function getGoods ({ pageIndex, pageSize }) {
+export function getSecretkey () {
   return request({
-    url: '/manager/goods/',
-    method: 'get',
-    params: { pageIndex, pageSize }
-  })
-}
-
-export function addGoods ({ id, data }) {
-  return request({
-    url: '/manager/goods/' + id + '/goodsImage/add',
-    method: 'post',
-    data
+    url: '/nonLogin/getAES',
+    method: 'get'
   })
 }

@@ -1,8 +1,8 @@
 import axios from 'axios'
 import store from '../store'
 import { Message } from 'element-ui'
-import { getAesString } from './encryption'
-import { getRSAString } from './jsencrypt'
+import { aesUtil, rsaUtil, privateKey } from './encryption'
+// import { getRSAString } from './jsencrypt'
 
 //  创建一个axios实例
 const service = axios.create({
@@ -14,12 +14,23 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   config => {
-    console.log(config, config.params)
-    console.log('fsdgfdsgh', getRSAString(JSON.stringify(config.params)))
     if (store.getters.token) {
       config.headers.token = store.getters.token
     }
-    config.params = getAesString(JSON.stringify(config.params))
+    // console.log('config: ', config)
+    // 如果data参数存在，headers中添加aesKey参数，再对data加密
+    if (config.data) {
+      // 随机生成key
+      const genKey = aesUtil.genKey()
+      console.log('随机key值genKey: ' + genKey)
+      // 用服务端的公钥对key进行rsa加密
+      // const aesKey = rsaUtil.encrypt(genKey, servePublicKey)
+      // console.log('用服务端的公钥对key进行rsa加密aesKey: ' + aesKey, rsaUtil.genKeyPair().publicKey)
+      // 对传的数据data进行aes加密
+      const aesData = aesUtil.encrypt(config.data, genKey)
+      // 请求data修改为加密且转码后的data字符串
+      config.data = encodeURIComponent(aesData)
+    }
 
     return config
   },
@@ -40,7 +51,38 @@ service.interceptors.response.use(
     //   })
     //   return
     // }
-    return response.data
+    // return response.data
+
+    if (response.status === 200) {
+      // ...其它代码
+
+      // 获取headers里的aeskey解码后解密
+      // 注意：由于底层问题，后端在header里返回的字段名微信小程序里保留大写，Chrome里转成了小写
+      const key = rsaUtil.decrypt(decodeURIComponent(response.header['aes-key']), privateKey)
+      // 把数据解码后用解密后的key解密，拿到正确数据
+      const serveData = aesUtil.decrypt(decodeURIComponent(response.data), key)
+
+      const { code, message = 'Error', data } = serveData
+
+      if (code === 200) {
+        return Promise.resolve(data)
+      } else {
+        Message({
+          message,
+          type: 'error',
+          duration: 3 * 1000
+        })
+      }
+    } else {
+      const message = '请求异常!'
+      Message({
+        message: message,
+        type: 'error',
+        duration: 3 * 1000
+      })
+      // return Promise.reject({ message: message, data: response.data })
+      return response.data
+    }
   },
   error => {
     let message
