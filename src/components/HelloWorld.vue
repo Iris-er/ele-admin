@@ -21,8 +21,8 @@ export default {
     }
   },
   mounted () {
-    console.log('父组件方法', this.$parent.toChild())
-    console.log(this.$data, this.$options.data())
+    // console.log('父组件方法', this.$parent.toChild())
+    // console.log(this.$data, this.$options.data())
   },
   methods: {
     addItem () {

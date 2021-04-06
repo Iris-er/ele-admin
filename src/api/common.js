@@ -21,14 +21,14 @@ export function getInfo () {
   })
 }
 
-export function getPublickey () {
+export function getServicePublickey () {
   return request({
     url: '/nonLogin/getRSA',
     method: 'get'
   })
 }
 
-export function getSecretkey () {
+export function getServiceSecretkey () {
   return request({
     url: '/nonLogin/getAES',
     method: 'get'

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '../store'
 import { Message } from 'element-ui'
-import { aesUtil, rsaUtil, privateKey } from './encryption'
+import { aesUtil, rsaUtil, privateKey, servePublicKey } from './encryption'
 // import { getRSAString } from './jsencrypt'
 
 //  创建一个axios实例
@@ -24,8 +24,8 @@ service.interceptors.request.use(
       const genKey = aesUtil.genKey()
       console.log('随机key值genKey: ' + genKey)
       // 用服务端的公钥对key进行rsa加密
-      // const aesKey = rsaUtil.encrypt(genKey, servePublicKey)
-      // console.log('用服务端的公钥对key进行rsa加密aesKey: ' + aesKey, rsaUtil.genKeyPair().publicKey)
+      const aesKey = rsaUtil.encrypt(genKey, servePublicKey)
+      console.log('用服务端的公钥对key进行rsa加密aesKey: ' + aesKey, 2121212121212, rsaUtil.genKeyPair().publicKey)
       // 对传的数据data进行aes加密
       const aesData = aesUtil.encrypt(config.data, genKey)
       // 请求data修改为加密且转码后的data字符串

@@ -52,7 +52,7 @@ export default {
   watch: {
     obj: {
       handler (newName, oldName) {
-        console.log('obj.a changed', this)
+        // console.log('obj.a changed', this)
       },
       immediate: true,
       deep: true

@@ -1,61 +1,39 @@
 import CryptoJS from 'crypto-js'
 import { JSEncrypt } from 'jsencrypt'
-import { getSecretkey } from '@/api/common.js'
+// import { getServicePublickey } from '@/api/common.js'
+import axios from 'axios'
 
-// export const keyUtil = {
-//   getServePublickey: function () {
-//     // return 4324
-//     getPublickey().then(res => {
-//       const { code, data } = res
+// function getServeAeskey () {
+//   return new Promise(resolve => {
+//     axios.get(process.env.VUE_APP_API_URL + '/nonLogin/getRSA', { withCredentials: true }).then(res => {
+//       const { code, data } = res.data
 //       if (code === 0) {
 //         console.log(data)
-//         const serveceKey = {
+//         const keyObj = {
 //           pub_key: data.publicKey,
 //           prv_key: data.privateKey
 //         }
-//         return serveceKey
+//         resolve(keyObj)
 //       }
 //     })
-//   },
-//   getServiceSecretKey: function () {
-//     getSecretkey().then(res => {
-//       const { code, data } = res
-//       if (code === 200) {
-//         console.log(data)
+//   })
+// }
 
-//         return data.SecretKey
-//       }
-//     })
+// const getServeRsakey = async () => {
+//   const rp = await axios.get(process.env.VUE_APP_API_URL + '/nonLogin/getRSA', { withCredentials: true })
+//   // console.log(11111, rp)
+//   const { code, data } = rp.data
+//   if (code === 0) {
+//     // console.log(data)
+//     const keyObj = {
+//       pub_key: data.publicKey,
+//       prv_key: data.privateKey
+//     }
+//     return keyObj
 //   }
 // }
 
-// function getServeRsakey () {
-//   getPublickey().then(res => {
-//     const { code, data } = res
-//     if (code === 0) {
-//       console.log(data)
-//       const serveceKey = {
-//         pub_key: data.publicKey,
-//         prv_key: data.privateKey
-//       }
-//       return serveceKey
-//     }
-//   })
-// };
-
-const getSecretAesKey = () => {
-  return new Promise((resolve, reject) => {
-    getSecretkey().then(res => {
-      const { code, data } = res
-      if (code === 0) {
-        console.log(data)
-        resolve(data)
-      }
-    }).catch(error => {
-      reject(error)
-    })
-  })
-}
+// console.log('servePublicKey: ', getServeRsakey(), getServeAeskey())
 
 /**
  * aes加密
@@ -100,21 +78,15 @@ export const aesUtil = {
       decString = JSON.parse(decString)
     }
     return decString
+  },
+  getServeAeskey: async function () {
+    const rp = await axios.get(process.env.VUE_APP_API_URL + '/nonLogin/getAES', { withCredentials: true })
+    // console.log(11111, rp)
+    const { code, data } = rp.data
+    if (code === 0) {
+      return data.SecretKey
+    }
   }
-
-  // getServiceSecretKey () {
-  //   return new Promise((resolve, reject) => {
-  //     getSecretkey().then(res => {
-  //       const { code, data } = res
-  //       if (code === 0) {
-  //         console.log(data)
-  //         resolve(data)
-  //       }
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-  // }
 }
 
 /**
@@ -147,7 +119,7 @@ export const rsaUtil = {
   encrypt: function (plaintext, publicKey) {
     // 由于秘钥已经生存一对保存在本地，该方法就在内部调用，生成setPublicKey方法
     this.genKeyPair()
-    console.log('this.genKeyPair() : ', this.genKeyPair())
+    // console.log('this.genKeyPair() : ', this.genKeyPair())
     if (plaintext instanceof Object) {
       // 1、JSON.stringify
       plaintext = JSON.stringify(plaintext)
@@ -167,6 +139,19 @@ export const rsaUtil = {
       decString = JSON.parse(decString)
     }
     return decString
+  },
+  getServeRsakey: async function () {
+    const rp = await axios.get(process.env.VUE_APP_API_URL + '/nonLogin/getRSA', { withCredentials: true })
+    // console.log(11111, rp)
+    const { code, data } = rp.data
+    if (code === 0) {
+      // console.log(data)
+      const keyObj = {
+        pub_key: data.publicKey,
+        prv_key: data.privateKey
+      }
+      return keyObj
+    }
   }
 }
 
@@ -178,20 +163,29 @@ export const publicKey = rsaUtil.genKeyPair().publicKey
 
 // export const publicKey = `前端的私钥`
 export const privateKey = rsaUtil.genKeyPair().privateKey
-// console.log('keyUtil.getServePublickey().pub_key', aesUtil.getServiceSecretKey())
-// console.log(getSecretAesKey, getServeRsakey())
-// console.log(getSecretkey().then())
-console.log(1111, getSecretAesKey())
 
-// /**
-//  * 服务端rsa生成的公钥
-//  */
-// export const servePublicKey = keyUtil.getServePublickey().pub_key
+// 服务端rsa生成的公钥
+export let servePublicKey = ''
+// 服务端rsa生成的私钥
+export let servePrivateKey = ''
+// 服务端aes生成的秘钥
+export let serveSecretKey = ''
+
+rsaUtil.getServeRsakey().then(item => {
+  console.log(item)
+  servePublicKey = item.pub_key
+  servePrivateKey = item.prv_key
+})
+
+aesUtil.getServeAeskey().then(item => {
+  console.log(item)
+  serveSecretKey = item
+})
 
 // /**
 //  * 服务端rsa生成的私钥
 //  */
-// export const servePrivateKey = keyUtil.getServePublickey().prv_key
+// export const servePrivateKey = getServeRsakey().prv_key
 
 // /**
 //  * 服务端aes生成的秘钥
