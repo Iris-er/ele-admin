@@ -1,4 +1,5 @@
 import { login } from '@/api/user'
+import * as types from '../mutation-types'
 const state = {
   user: {
     name: '',
@@ -10,7 +11,8 @@ const state = {
   },
   token: '',
   authorization: '',
-  roles: []
+  roles: [],
+  powers: null
 }
 
 const mutations = {
@@ -26,6 +28,15 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  [types.UPDATE_POWERS] (state, payload) {
+    const powers = {}
+    Object.keys(payload).forEach(k => {
+      payload[k].forEach(p => {
+        powers[k + '_' + p] = 1
+      })
+    })
+    state.powers = powers
   }
 }
 
@@ -68,6 +79,21 @@ const actions = {
     //     reject(error)
     //   })
     // })
+  },
+  async getPowers ({ commit, state }) {
+    commit(types.UPDATE_POWERS, {
+      account_read: 1,
+      agreement_add: 1
+    })
+    // const u = state.user || {}
+    // Vue.prototype.$koapi.defaults.headers.Authorization = u.token
+    // const rp = await Vue.prototype.$koapi.request('auth.getPowers')
+
+    // if (rp.code === 200) {
+    //   commit(types.UPDATE_POWERS, rp.data)
+    // }
+
+    // return rp
   }
 }
 

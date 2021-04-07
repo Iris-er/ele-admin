@@ -1,19 +1,29 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import getters from './getters'
+import auth from './modules/auth'
+import * as types from './mutation-types'
+import foundation from './modules/foundation'
+
 Vue.use(Vuex)
 
-// 自定义组件
-const modulesFiles = require.context('./modules', true, /\.js$/)
-
-// 截取路径作为组件名
-const modules = modulesFiles.keys().reduce((modules, modulePath) => {
-  const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
-  const value = modulesFiles(modulePath)
-  modules[moduleName] = value.default
-  return modules
-}, {})
 export default new Vuex.Store({
-  modules,
-  getters
+  strict: process.env.NODE_ENV !== 'production',
+  modules: {
+    auth, // 登录用户相关数据
+    foundation // 通用数据
+  },
+  state: {
+  },
+  mutations: {
+    /**
+     * 清除用户登录态
+     */
+    [types.CLEAN_USER] (state) {
+      state.auth.user = null
+      state.auth.powers = null
+      localStorage.removeItem('koAdminUser')
+    }
+  },
+  actions: {
+  }
 })

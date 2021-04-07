@@ -1,0 +1,33 @@
+.mui-flex{
+  width: 100%;
+  height: calc(100vh);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  .mui-menu{
+    height: 100%;
+    width: 200px;
+    border-right: 1px solid deeppink;
+    background-color: pink;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .container-flex{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    .mui-header{
+     height: 40px;
+     line-height: 40px;
+     background-color: pink;
+     border-bottom: 1px solid salmon;
+     color: slateblue;
+     font-size: 20px;
+    }
+
+  }
+}
